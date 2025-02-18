@@ -115,6 +115,19 @@ class GreenPassion(Default):
         self.List.selection_cursor = "❯"
 
 
+class GreenStar(Default):
+    def __init__(self):
+        super().__init__()
+        # self.Question.prefix = f"{term.green}[{term.red}?{term.green}]{term.normal} "
+        self.Question.brackets_color = term.bright_green
+        self.Checkbox.selection_color = term.bold_black_on_bright_green
+        self.Checkbox.selection_icon = "❯"
+        self.Checkbox.selected_icon = "✶ "
+        self.Checkbox.selected_color = term.green
+        self.Checkbox.unselected_icon = "  "
+        self.List.selection_color = term.bold_black_on_bright_green
+        self.List.selection_cursor = "❯"
+
 class BlueComposure(Default):
     def __init__(self):
         super().__init__()
