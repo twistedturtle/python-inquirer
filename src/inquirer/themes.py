@@ -71,7 +71,7 @@ def load_theme_from_dict(dict_theme):
 
 class Theme:
     def __init__(self):
-        self.Question = collections.namedtuple("question", "mark_color brackets_color default_color")
+        self.Question = collections.namedtuple("question", "prefix mark_color brackets_color default_color")
         self.Editor = collections.namedtuple("editor", "opening_prompt")
         self.Checkbox = collections.namedtuple(
             "common",
@@ -79,6 +79,8 @@ class Theme:
             "selected_icon unselected_icon locked_option_color",
         )
         self.List = collections.namedtuple("List", "selection_color selection_cursor unselected_color")
+
+        self.Question.prefix = None
 
 
 class Default(Theme):
