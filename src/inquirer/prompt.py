@@ -1,7 +1,7 @@
 import inquirer.themes as themes
 from inquirer.render.console import ConsoleRender
 
-import signal
+import signal, sys
 
 def signal_handler(sig, frame):
     sys.exit(1)
