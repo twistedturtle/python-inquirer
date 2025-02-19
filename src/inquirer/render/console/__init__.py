@@ -91,7 +91,7 @@ class ConsoleRender:
         # ensure any user input with { or } will not cause a formatting error
         escaped_current_value = str(render.get_current_value()).replace("{", "{{").replace("}", "}}")
         self.print_str(
-            f"\n{msg_template}: {escaped_current_value}",
+            f"\n{msg_template} {escaped_current_value}",
             msg=header,
             lf=not render.title_inline,
             tq=self._theme.Question,
