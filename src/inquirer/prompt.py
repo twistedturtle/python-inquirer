@@ -1,8 +1,9 @@
 import inquirer.themes as themes
 from inquirer.render.console import ConsoleRender
 
+import signal
 
-def prompt(questions, render=None, answers=None, theme=themes.Default(), raise_keyboard_interrupt=False):
+def prompt(questions, render=None, answers=None, theme=themes.Default(), raise_keyboard_interrupt=False, raise_sigint=True):
     render = render or ConsoleRender(theme=theme)
     answers = answers or {}
 
@@ -13,6 +14,8 @@ def prompt(questions, render=None, answers=None, theme=themes.Default(), raise_k
     except KeyboardInterrupt:
         if raise_keyboard_interrupt:
             raise
+        if raise_sigint:
+            signal.raise_signal(signal.SIGINT)
         print("")
         print("Cancelled by user")
         print("")
