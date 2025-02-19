@@ -200,4 +200,4 @@ class ConsoleRender:
 
     @property
     def height(self):
-        return self.terminal.width or 24
+        return self.terminal.height or 24
