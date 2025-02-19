@@ -3,7 +3,7 @@ from inquirer.render.console import ConsoleRender
 
 import signal
 
-def prompt(questions, render=None, answers=None, theme=themes.Default(), raise_keyboard_interrupt=False, raise_sigint=True):
+def prompt(questions, render=None, answers=None, theme=themes.Default(), raise_keyboard_interrupt=False, raise_sigint=True, int_msg=True):
     render = render or ConsoleRender(theme=theme)
     answers = answers or {}
 
@@ -12,10 +12,10 @@ def prompt(questions, render=None, answers=None, theme=themes.Default(), raise_k
             answers[question.name] = render.render(question, answers)
         return answers
     except KeyboardInterrupt:
+        if int_msg:
+            print(theme.Question.int_msg)
         if raise_keyboard_interrupt:
             raise
         if raise_sigint:
             signal.raise_signal(signal.SIGINT)
-        print("")
-        print("Cancelled by user")
-        print("")
+

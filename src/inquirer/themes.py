@@ -71,7 +71,7 @@ def load_theme_from_dict(dict_theme):
 
 class Theme:
     def __init__(self):
-        self.Question = collections.namedtuple("question", "prefix mark_color brackets_color default_color")
+        self.Question = collections.namedtuple("question", "prefix mark_color brackets_color default_color int_msg")
         self.Editor = collections.namedtuple("editor", "opening_prompt")
         self.Checkbox = collections.namedtuple(
             "common",
@@ -89,6 +89,7 @@ class Default(Theme):
         self.Question.mark_color = term.yellow
         self.Question.brackets_color = term.normal
         self.Question.default_color = term.normal
+        self.Question.int_msg = "User Cancelled"
         self.Editor.opening_prompt_color = term.bright_black
         self.Checkbox.selection_color = term.cyan
         self.Checkbox.selection_icon = ">"
@@ -127,6 +128,7 @@ class GreenStar(Default):
         self.Checkbox.unselected_icon = "  "
         self.List.selection_color = term.bold_black_on_bright_green
         self.List.selection_cursor = "❯"
+
 
 class BlueComposure(Default):
     def __init__(self):
