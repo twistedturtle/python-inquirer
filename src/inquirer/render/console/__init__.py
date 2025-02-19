@@ -179,6 +179,9 @@ class ConsoleRender:
         if lf:
             self._position += 1
 
+        # Account for newlines in question
+        self._position += base.count("\n")
+
         print(base.format(t=self.terminal, **kwargs), end="\n" if lf else "")
         sys.stdout.flush()
 
