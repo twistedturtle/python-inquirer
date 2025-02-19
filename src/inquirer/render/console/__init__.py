@@ -181,7 +181,8 @@ class ConsoleRender:
             self._position += 1
 
         # Account for newlines in question
-        self._position += base.count("\n")
+        if "msg" in kwargs:
+            self._position += kwargs["msg"].count("\n")
 
         # Account for newlines in the preamble
         if "preamble" in kwargs:
