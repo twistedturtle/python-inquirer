@@ -41,6 +41,7 @@ class Question:
     def __init__(
         self,
         name,
+        preamble="",
         message="",
         choices=None,
         default=None,
@@ -51,6 +52,7 @@ class Question:
         other=False,
     ):
         self.name = name
+        self._preamble = preamble
         self._message = message
         self._choices = choices or []
         self._default = default
@@ -116,11 +118,12 @@ class Question:
 class Text(Question):
     kind = "text"
 
-    def __init__(self, name, message="", default=None, autocomplete=None, **kwargs):
+    def __init__(self, name, preamble="", message="", default=None, autocomplete=None, **kwargs):
         super().__init__(
-            name, message=message, default=str(default) if default and not callable(default) else default, **kwargs
+            name, preamble=preamble, message=message, default=str(default) if default and not callable(default) else default, **kwargs
         )
         self.autocomplete = autocomplete
+
 
 
 class Password(Text):
@@ -138,8 +141,8 @@ class Editor(Text):
 class Confirm(Question):
     kind = "confirm"
 
-    def __init__(self, name, default=False, **kwargs):
-        super().__init__(name, default=default, **kwargs)
+    def __init__(self, name, preamble="", default=False, **kwargs):
+        super().__init__(name, preamble=preamble, default=default, **kwargs)
 
 
 class List(Question):
@@ -148,6 +151,7 @@ class List(Question):
     def __init__(
         self,
         name,
+        preamble="",
         message="",
         choices=None,
         hints=None,
@@ -158,7 +162,7 @@ class List(Question):
         other=False,
         autocomplete=None,
     ):
-        super().__init__(name, message, choices, default, ignore, validate, hints=hints, other=other)
+        super().__init__(name, preamble, message, choices, default, ignore, validate, hints=hints, other=other)
         self.carousel = carousel
         self.autocomplete = autocomplete
 
@@ -169,6 +173,7 @@ class Checkbox(Question):
     def __init__(
         self,
         name,
+        preamble="",
         message="",
         choices=None,
         hints=None,
@@ -180,7 +185,7 @@ class Checkbox(Question):
         other=False,
         autocomplete=None,
     ):
-        super().__init__(name, message, choices, default, ignore, validate, hints=hints, other=other)
+        super().__init__(name, preamble, message, choices, default, ignore, validate, hints=hints, other=other)
         self.locked = locked
         self.carousel = carousel
         self.autocomplete = autocomplete
@@ -193,8 +198,8 @@ class Path(Text):
 
     kind = "path"
 
-    def __init__(self, name, default=None, path_type="any", exists=None, **kwargs):
-        super().__init__(name, default=default, **kwargs)
+    def __init__(self, name, preamble="", default=None, path_type="any", exists=None, **kwargs):
+        super().__init__(name, preamble=preamble, default=default, **kwargs)
 
         if path_type in (Path.ANY, Path.FILE, Path.DIRECTORY):
             self._path_type = path_type

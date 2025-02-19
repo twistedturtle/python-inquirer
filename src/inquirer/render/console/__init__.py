@@ -81,11 +81,11 @@ class ConsoleRender:
 
         if self._theme.Question.prefix != None:
             msg_template = (
-            "{t.move_up}{t.clear_eol}" "{tq.prefix}{t.normal}{msg}"
+            "{t.move_up}{t.clear_eol}" "{preamble}{tq.prefix}{t.normal}{msg}"
             )
         else:
             msg_template = (
-                "{t.move_up}{t.clear_eol}{tq.brackets_color}[" "{tq.mark_color}?{tq.brackets_color}]{t.normal} {msg}"
+                "{t.move_up}{t.clear_eol}{preamble}{tq.brackets_color}[" "{tq.mark_color}?{tq.brackets_color}]{t.normal} {msg}"
             )
 
         # ensure any user input with { or } will not cause a formatting error
@@ -95,6 +95,7 @@ class ConsoleRender:
             msg=header,
             lf=not render.title_inline,
             tq=self._theme.Question,
+            preamble=render.question._preamble
         )
 
     def _print_hint(self, render):
@@ -181,6 +182,10 @@ class ConsoleRender:
 
         # Account for newlines in question
         self._position += base.count("\n")
+
+        # Account for newlines in the preamble
+        if "preamble" in kwargs:
+            self._position += kwargs["preamble"].count("\n")
 
         print(base.format(t=self.terminal, **kwargs), end="\n" if lf else "")
         sys.stdout.flush()
