@@ -412,8 +412,24 @@ class List2(BaseConsoleRender):
 
         self.current = 0
 
-        # if self.question.list.set_default:
-        #     pass
+        if self.question.default:
+            for i, option in enumerate(self.options):
+                if option.text == self.question.default:
+                    default_option = option
+                    break
+            self.current = i
+            self.cur_row, self.cur_col = self._reverseindex(self.current)
+
+
+    def _reverseindex(self, i):
+        if self.hsort:
+            row = i // self.ncols
+            col = i % self.nrows
+            return row, col
+
+        row = i % self.ncols
+        col = i // self.nrows
+        return row, col
 
     def _index(self, row, col):
         if self.hsort:
