@@ -264,11 +264,8 @@ class List2(BaseConsoleRender):
         else:
             self.paddingsize = 2
 
-
-        self.cur_row = 0
-        self.cur_col = 0
-
         self.process_options(self.hsort)
+        self.cur_row, self.cur_col = self._reverseindex(self.current)
 
     @property
     def is_long(self):
@@ -282,15 +279,6 @@ class List2(BaseConsoleRender):
 
         self.nrows, self.ncols, self.colwidths = get_colwidths(self.options, prefix_size, self.paddingsize, hsort=self.hsort, arrangement=self.arrangement) #, displaywidth)
 
-        self.current = 0
-
-        if self.question.default:
-            for i, option in enumerate(self.options):
-                if option.text == self.question.default:
-                    default_option = option
-                    break
-            self.current = i
-            self.cur_row, self.cur_col = self._reverseindex(self.current)
 
 
     def _reverseindex(self, i):
