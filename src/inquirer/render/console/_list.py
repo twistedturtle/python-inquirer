@@ -105,28 +105,8 @@ class List(BaseConsoleRender):
 class Option:
     def __init__(self, text):
         self.text = text
-
         self.length = len(stripformatting(text))
-        # self.colwidth = 0
 
-        # self.selected = False
-        # self.marked
-
-    def get_text(self):
-        # cursor = " " * len(theme.selection_cursor)
-        # color  = theme.unselected_color
-        # smark = ""  # selected mark, for checkbox
-
-        # if self.selected:
-        #     color = theme.selected_color
-        #     cursor = theme.selection_cursor
-
-        # # for checkbox
-        # # if self.checkbox and self.marked:
-        # #     smark = theme.selected_mark
-
-        # padding = " " * (self.colwdith - self.length)
-        return self.text
 
 
 from dataclasses import dataclass
@@ -149,17 +129,13 @@ class Layout:
     ''' A row, col combination '''
     rows: int = 0
     cols: int = 0
-    # self.plain = ""
-    # self.len_plain = 0
-    # self.needs_quotes = False
+
 
 @dataclass
 class ColWidth:
     ''' Hold values for each column '''
     width: int = 0
     count: int = 0
-    # quote: bool = False
-    # longest_quoted:bool = False
 
 
 def get_layouts(maxcols, size, hsort=False, arrangement="horiz"): #sort="horiz"):
@@ -169,8 +145,6 @@ def get_layouts(maxcols, size, hsort=False, arrangement="horiz"): #sort="horiz")
     for col in range(1, maxcols, 1):
         nrows = math.ceil(size / col)
         if nrows not in prevrows:
-            # if even is True and not nrows % 2 == 0:
-            #     continue
             layouts.append(Layout(nrows, col))
             prevrows.append(nrows)
 
@@ -189,12 +163,9 @@ def get_layouts_vert(maxrows, size, even=True, arrangement="vert"):
     for row in range(1, maxrows, 1):
         ncols = math.ceil(size / row)
         if ncols not in prevcols:
-            # if even is True and not nrows % 2 == 0:
-            #     continue
             layouts.append(Layout(row, ncols))
             prevcols.append(ncols)
 
-    # if we want as many rows as pos
     if arrangement == "vert":
         layouts.reverse()
     elif arrangement == "grid":
@@ -219,7 +190,7 @@ def get_colwidths(lst, prefixsize, paddingsize, hsort, arrangement, displaywidth
         maxcols = min(40, size) + 1
         layouts = get_layouts(maxcols, size, hsort, arrangement)
     else:
-        maxrows = min(MAX_OPTIONS_DISPLAYED_AT_ONCE, size) + 1 # not sure about + 1
+        maxrows = min(MAX_OPTIONS_DISPLAYED_AT_ONCE, size) + 1
         layouts = get_layouts_vert(maxrows, size, hsort, arrangement)
 
     index = lambda nrows, row, col: nrows * col + row
@@ -230,11 +201,9 @@ def get_colwidths(lst, prefixsize, paddingsize, hsort, arrangement, displaywidth
     for layout in layouts:
         nrows = layout.rows
         ncols = layout.cols
-        # self._layout = layout
 
         colwidths = []
         icolwidths = []
-        # line_width = -len(self.colsep)
         line_width = 0
 
         for col in range(ncols):
@@ -251,118 +220,21 @@ def get_colwidths(lst, prefixsize, paddingsize, hsort, arrangement, displaywidth
                 plain = stripformatting(option.text)
                 siz = len(plain)
 
-                # if plain[0] in self.quotes:
-                #     colwidth.quote = True
-
                 if siz >= colwidth.width:
                     colwidth.width = siz
-                    # if plain[0] in self.quotes:
-                    #     colwidth.longest_quoted = True
-                    # else:
-                    #     colwidth.longest_quoted = False
+
                 colwidth.count += 1
 
-            # if self.align_quotes:
-            #     if colwidth.quote and not colwidth.longest_quoted:
-            #         colwidth.width += 1
-
             colwidths.append(colwidth)
-            line_width += colwidth.width# + len(colsep)
+            line_width += colwidth.width
 
-        # line_width += self.prefix_size() + self.suffix_size() + self.lineprefix_size() \
-        #  + self.linesuffix_size() + self.colsep_size() * (len(self._colwidths))
         line_width += prefixsize  * (len(colwidths)) + paddingsize * (len(colwidths) - 1)
 
         if line_width <= displaywidth-3:
             break
 
-    # assign colwidths to each option
-    # or return colwidths
     return (nrows, ncols, colwidths)
 
-
-
-# def get_colwidths_vert(lst, prefixsize, paddingsize, hsort, displaywidth=get_display_width()):
-#     ''' Get colwidths for a list of strings '''
-#     if (size := len(lst)) == 0:
-#         return
-
-#     '''
-#     arrange vertically in allotted space
-#         MAX_OPTIONS_DISPLAYED_AT_ONCE
-#     if can't fit then add more cols
-
-#     1  5
-#     2  6
-#     3  7
-#     4  8
-
-#     maxrows = min(MAX_OPTIONS_DISPLAYED_AT_ONCE, size) + 1 # not sure about + 1
-
-#     layout = get_layouts_vert(maxrows, size, False)
-
-#     '''
-
-#     maxrows = min(MAX_OPTIONS_DISPLAYED_AT_ONCE, size) + 1 # not sure about + 1
-
-#     layouts = get_layouts_vert(maxrows, size, hsort, "grid")
-
-#     index = lambda nrows, row, col: nrows * col + row
-
-#     if hsort:
-#         index = lambda ncols, row, col: ncols * row + col
-
-#     for layout in layouts:
-#         nrows = layout.rows
-#         ncols = layout.cols
-#         # self._layout = layout
-
-#         colwidths = []
-#         icolwidths = []
-#         # line_width = -len(self.colsep)
-#         line_width = 0
-
-#         for col in range(ncols):
-#             colwidth = ColWidth()
-#             for row in range(nrows):
-#                 if hsort:
-#                     i = index(ncols, row, col)
-#                 else:
-#                     i = index(nrows, row, col)
-#                 if i >= size:
-#                     break
-#                 option = lst[i]
-
-#                 plain = stripformatting(option.text)
-#                 siz = len(plain)
-
-#                 # if plain[0] in self.quotes:
-#                 #     colwidth.quote = True
-
-#                 if siz >= colwidth.width:
-#                     colwidth.width = siz
-#                     # if plain[0] in self.quotes:
-#                     #     colwidth.longest_quoted = True
-#                     # else:
-#                     #     colwidth.longest_quoted = False
-
-#             # if self.align_quotes:
-#             #     if colwidth.quote and not colwidth.longest_quoted:
-#             #         colwidth.width += 1
-
-#             colwidths.append(colwidth)
-#             line_width += colwidth.width# + len(colsep)
-
-#         # line_width += self.prefix_size() + self.suffix_size() + self.lineprefix_size() \
-#         #  + self.linesuffix_size() + self.colsep_size() * (len(self._colwidths))
-#         line_width += prefixsize  * (len(colwidths)) + paddingsize * (len(colwidths) - 1)
-
-#         if line_width <= displaywidth-3:
-#             break
-
-#     # assign colwidths to each option
-#     # or return colwidths
-#     return (nrows, ncols, colwidths)
 
 class List2(BaseConsoleRender):
     def __init__(self, *args, **kwargs):
@@ -468,7 +340,7 @@ class List2(BaseConsoleRender):
                 uscolor = self.theme.List.unselected_color
                 scursor = self.theme.List.selection_cursor
 
-                color  = scolor  if self.is_selected(r, c) else uscolor #* len(scolor)
+                color  = scolor  if self.is_selected(r, c) else uscolor
                 cursor = scursor if self.is_selected(r, c) else " " * len(scursor)
 
                 line += f"{color}{cursor} {option.text}{uscolor}{extra}{padding}"
@@ -511,41 +383,12 @@ class List2(BaseConsoleRender):
                 symbol = " " if choice == GLOBAL_OTHER_CHOICE else " " * len(self.theme.List.selection_cursor)
             yield choice, symbol, color
 
-    # def process_input(self, pressed):
-    #     question = self.question
-    #     if pressed == key.UP:
-    #         if question.carousel and self.current == 0:
-    #             self.current = len(question.choices) - 1
-    #         else:
-    #             self.current = max(0, self.current - 1)
-    #         return
-    #     if pressed == key.DOWN:
-    #         if question.carousel and self.current == len(question.choices) - 1:
-    #             self.current = 0
-    #         else:
-    #             self.current = min(len(self.question.choices) - 1, self.current + 1)
-    #         return
-    #     if pressed == key.ENTER:
-    #         value = self.question.choices[self.current]
-
-    #         if value == GLOBAL_OTHER_CHOICE:
-    #             value = self.other_input()
-    #             if not value:
-    #                 # Clear the print inquirer.text made, since the user didn't enter anything
-    #                 print(self.terminal.move_up + self.terminal.clear_eol, end="")
-    #                 return
-
-    #         raise errors.EndOfInput(getattr(value, "value", value))
-
-    #     if pressed == key.CTRL_C:
-    #         raise KeyboardInterrupt()
 
     def process_input(self, pressed):
         question = self.question
         if pressed == key.UP:
             self.cur_row -= 1
             if self.cur_row < 0:
-                # self.cur_row = self.nrows - 1 if self.question.carousel else 0
                 self.cur_row = self.colwidths[self.cur_col].count - 1 if self.question.carousel else 0
             self.current = self._index(self.cur_row, self.cur_col)
             return
@@ -553,7 +396,6 @@ class List2(BaseConsoleRender):
         if pressed == key.DOWN:
             self.cur_row += 1
             if self.cur_row >= self.colwidths[self.cur_col].count:
-                # self.cur_row = 0 if self.question.carousel else self.nrows -1
                 self.cur_row = 0 if self.question.carousel else self.colwidths[self.cur_col].count - 1
             self.current = self._index(self.cur_row, self.cur_col)
             return
