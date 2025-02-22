@@ -150,7 +150,7 @@ class ConsoleRender:
             )
 
     def render_in_bottombar(self, message):
-        with self.terminal.location(0, self.height - 2):
+        with self.terminal.location(0, self.height - 1):
             self.clear_eos()
             self.print_str(message)
 
@@ -345,7 +345,7 @@ class ConsoleRender2:
             )
 
     def render_in_bottombar(self, message):
-        with self.terminal.location(0, self.height - 2):
+        with self.terminal.location(0, self.height - 1):
             self.clear_eos()
             self.print_str(message)
 
