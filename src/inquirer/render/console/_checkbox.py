@@ -313,51 +313,6 @@ class Checkbox2(BaseConsoleRender):
 
             yield choice, selector + " " + symbol, color
 
-    # def process_input(self, pressed):
-    #     question = self.question
-    #     is_current_choice_locked = question.choices[self.current] in self.locked
-    #     if pressed == key.UP:
-    #         if question.carousel and self.current == 0:
-    #             self.current = len(question.choices) - 1
-    #         else:
-    #             self.current = max(0, self.current - 1)
-    #         return
-    #     elif pressed == key.DOWN:
-    #         if question.carousel and self.current == len(question.choices) - 1:
-    #             self.current = 0
-    #         else:
-    #             self.current = min(len(self.question.choices) - 1, self.current + 1)
-    #         return
-    #     elif pressed == key.SPACE:
-    #         if self.question.choices[self.current] == GLOBAL_OTHER_CHOICE:
-    #             self.other_input()
-    #         elif self.current in self.selection:
-    #             if not is_current_choice_locked:
-    #                 self.selection.remove(self.current)
-    #         else:
-    #             self.selection.append(self.current)
-    #     elif pressed == key.LEFT:
-    #         if self.current in self.selection:
-    #             if not is_current_choice_locked:
-    #                 self.selection.remove(self.current)
-    #     elif pressed == key.RIGHT:
-    #         if self.current not in self.selection:
-    #             self.selection.append(self.current)
-    #     elif pressed == key.CTRL_A:
-    #         self.selection = [i for i in range(len(self.question.choices))]
-    #     elif pressed == key.CTRL_R:
-    #         self.selection = []
-    #     elif pressed == key.CTRL_I:
-    #         self.selection = [i for i in range(len(self.question.choices)) if i not in self.selection]
-    #     elif pressed == key.ENTER:
-    #         result = []
-    #         for x in self.selection:
-    #             value = self.question.choices[x]
-    #             result.append(getattr(value, "value", value))
-    #         raise errors.EndOfInput(result)
-    #     elif pressed == key.CTRL_C:
-    #         raise KeyboardInterrupt()
-
 
     def process_input(self, pressed):
         question = self.question
