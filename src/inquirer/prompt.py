@@ -18,7 +18,7 @@ def prompt(questions, render=None, answers=None, theme=themes.Default(), raise_k
         return answers
     except KeyboardInterrupt:
         if int_msg:
-            print(theme.Question.int_msg)
+            print(render.terminal.clear_eol() + theme.Question.int_msg)
         if raise_keyboard_interrupt:
             raise
         if raise_sigint:
