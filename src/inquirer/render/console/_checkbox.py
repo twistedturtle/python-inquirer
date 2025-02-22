@@ -214,7 +214,7 @@ class Checkbox2(BaseConsoleRender):
         return False
 
     def get_option_lines(self):
-        padding = " " * 2
+        padding = " " * self.paddingsize
         for r in range(self.nrows):
             line = ""
             for c in range(self.ncols):
