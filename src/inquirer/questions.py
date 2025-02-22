@@ -191,11 +191,18 @@ class Checkbox(Question):
         carousel=False,
         other=False,
         autocomplete=None,
+        hsort=None,
+        arrangement=None,
+        pad_size=None,
     ):
         super().__init__(name, preamble, message, choices, default, ignore, validate, hints=hints, other=other)
         self.locked = locked
         self.carousel = carousel
         self.autocomplete = autocomplete
+
+        self.hsort = hsort
+        self.arrangement = arrangement
+        self.pad_size = pad_size
 
 
 class Path(Text):

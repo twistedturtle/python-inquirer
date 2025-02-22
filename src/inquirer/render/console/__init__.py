@@ -5,7 +5,7 @@ from blessed import Terminal
 from inquirer import errors
 from inquirer import events
 from inquirer import themes
-from inquirer.render.console._checkbox import Checkbox
+from inquirer.render.console._checkbox import Checkbox, Checkbox2
 from inquirer.render.console._confirm import Confirm
 from inquirer.render.console._editor import Editor
 from inquirer.render.console._list import List, List2
@@ -203,6 +203,14 @@ class ConsoleRender:
         return self.terminal.height or 24
 
 
+
+
+
+
+
+
+
+
 class ConsoleRender2:
     def __init__(self, event_generator=None, theme=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -253,11 +261,6 @@ class ConsoleRender2:
         self._previous_error = None
 
     def _print_options(self, render):
-        # for message, symbol, color in render.get_options():
-            # if hasattr(message, "decode"):  # python 2
-            #     message = message.decode("utf-8")
-            # self.print_line(" {color}{s} {m}{t.normal}", m=message, color=color, s=symbol)
-
         for msg in render.get_option_lines():
             self.print_line(msg)
 
@@ -321,7 +324,7 @@ class ConsoleRender2:
         self._position = 0
 
     def _go_to_end(self, render):
-        positions = len(list(render.get_options())) - self._position
+        positions = len(list(render.get_option_lines())) - self._position
         if positions > 0:
             print(self._position * self.terminal.move_down, end="")
         self._position = 0
@@ -357,7 +360,7 @@ class ConsoleRender2:
             "password": Password,
             "confirm": Confirm,
             "list": List2,
-            "checkbox": Checkbox,
+            "checkbox": Checkbox2,
             "path": Path,
         }
 

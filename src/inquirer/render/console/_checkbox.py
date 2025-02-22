@@ -153,31 +153,24 @@ class Checkbox2(BaseConsoleRender):
         self.current = 0
 
 
-        if self.question.hsort:
-            self.hsort = self.question.hsort
-        elif self.theme.options.hsort:
-            self.hsort = self.theme.options.hsort
-        else:
-            # shouldn't get here
-            self.hsort = False
-
-        # also check it's valid
-        if self.question.arrangement:
-            self.arrangement = self.question.arrangement
-        elif self.theme.options.arrangement:
-            self.arrangement = self.theme.options.arrangement
-        else:
-            self.arrangement = "vert"  # ["vert", "horiz", "grid"]
-
-        if self.question.pad_size:
-            self.paddingsize = self.question.pad_size
-        elif self.theme.options.pad_size:
-            self.paddingsize = self.theme.options.pad_size
-        else:
-            self.paddingsize = 2
+        q = self.question
+        t = self.theme.options
+        self.hsort = self._get_option(q.hsort, t.hsort, False)
+        self.arrangement = self._get_option(q.arrangement, t.arrangement, "vert")
+        self.paddingsize = self._get_option(q.pad_size, t.pad_size, 2)
 
         self.process_options()
         self.cur_row, self.cur_col = self._reverseindex(self.current)
+
+
+    def _get_option(self, question_option, theme_option, default):
+        if question_option:
+            var = question_option
+        elif theme_option:
+            var = theme_option
+        else:
+            var = default
+        return var
 
     def get_hint(self):
         try:
@@ -206,11 +199,11 @@ class Checkbox2(BaseConsoleRender):
         if self.hsort:
             row = i // self.ncols
             col = i % self.nrows
-            return row, col
+            return (row, col)
 
         row = i % self.ncols
         col = i // self.nrows
-        return row, col
+        return (row, col)
 
     def _index(self, row, col):
         if self.hsort:
@@ -218,7 +211,14 @@ class Checkbox2(BaseConsoleRender):
         return self.nrows * col + row
 
     def is_selected(self, row, col):
-        if row == self.cur_row and col == self.cur_col:
+        i = self._index(row, col)
+        if i in self.selection:
+            return True
+        return False
+
+    def is_current(self, row,col):
+        i = self._index(row, col)
+        if i == self.current:
             return True
         return False
 
@@ -233,14 +233,42 @@ class Checkbox2(BaseConsoleRender):
                 option = self.options[i]
                 extra = " " * (self.colwidths[c].width - option.length)
 
-                scolor  = self.theme.List.selection_color
-                uscolor = self.theme.List.unselected_color
-                scursor = self.theme.List.selection_cursor
+                scursor = self.theme.Checkbox.selection_icon
+                scolor  = self.theme.Checkbox.selection_color
+                uscolor = self.theme.Checkbox.unselected_color
 
-                color  = scolor  if self.is_selected(r, c) else uscolor
-                cursor = scursor if self.is_selected(r, c) else " " * len(scursor)
+                smark   = self.theme.Checkbox.selected_icon
+                usmark  = self.theme.Checkbox.unselected_icon
+                smcolor = self.theme.Checkbox.selected_color
 
-                line += f"{color}{cursor} {option.text}{uscolor}{extra}{padding}"
+                if self.is_current(r, c):
+                    color = scolor
+                    cursor = scursor
+                    mark = " " * len(smark)
+                    if self.is_selected(r,c):
+                        mark = smark
+                elif self.is_selected(r, c):
+                    color = smcolor
+                    cursor = " " * len(scursor)
+                    mark = smark
+                else:
+                    color = uscolor
+                    cursor = " " * len(scursor)
+                    if usmark:
+                        mark = usmark
+                    else:
+                        mark = " " * len(smark)
+
+                # color  = smcolor  if self.is_selected(r, c) else uscolor
+                # color  = scolor if self.is_current(r, c) else color
+
+                # cursor = scursor if self.is_current(r, c) else " " * len(scursor)
+                # if self.theme.Checkbox.unselected_icon:
+                #     mark  = smark if self.is_selected(r, c) else usmark
+                # else:
+                #     mark  = smark if self.is_selected(r, c) else " " * len(smark)
+
+                line += f"{color}{cursor} {mark}{option.text}{uscolor}{extra}{padding}"
             yield line.rstrip(" ")
 
     def get_options(self):
@@ -391,16 +419,11 @@ class Checkbox2(BaseConsoleRender):
             self.selection = [i for i in range(len(self.question.choices)) if i not in self.selection]
 
         if pressed == key.ENTER:
-            value = self.question.choices[self.current]
-
-            if value == GLOBAL_OTHER_CHOICE:
-                value = self.other_input()
-                if not value:
-                    # Clear the print inquirer.text made, since the user didn't enter anything
-                    print(self.terminal.move_up + self.terminal.clear_eol, end="")
-                    return
-
-            raise errors.EndOfInput(getattr(value, "value", value))
+            result = []
+            for x in self.selection:
+                value = self.question.choices[x]
+                result.append(getattr(value, "value", value))
+            raise errors.EndOfInput(result)
 
         if pressed == key.CTRL_C:
             raise KeyboardInterrupt()
