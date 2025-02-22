@@ -1,6 +1,6 @@
 
 # columnise
-
+from inquirer.render.console.base import MAX_OPTIONS_DISPLAYED_AT_ONCE
 from dataclasses import dataclass
 from shutil import get_terminal_size  # Python >= 3.3
 import re, math
@@ -15,6 +15,13 @@ def get_display_width():
         width = DEFAULT_WIDTH
 
     return width
+
+
+class Option:
+    def __init__(self, text):
+        self.text = text
+        self.length = len(stripformatting(text))
+
 
 @dataclass
 class Layout:
