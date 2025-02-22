@@ -129,14 +129,25 @@ class GreenPassion(Default):
 class GreenStar(Default):
     def __init__(self):
         super().__init__()
-        # self.Question.prefix = f"{term.green}[{term.red}?{term.green}]{term.normal} "
         self.Question.brackets_color = term.bright_green
-        self.Checkbox.selection_color = term.bold_black_on_bright_green
+        self.Checkbox.selection_color = term.green + term.bold
         self.Checkbox.selection_icon = "❯"
-        self.Checkbox.selected_icon = "✶ "
+        self.Checkbox.selected_icon = "✶ " # spacing varies a lot with font
         self.Checkbox.selected_color = term.green
         self.Checkbox.unselected_icon = "  "
-        # self.List.selection_color = term.bold_black_on_bright_green
+        self.List.selection_color = term.green
+        self.List.selection_cursor = "❯"
+
+
+class GreenAsterisk(Default):
+    def __init__(self):
+        super().__init__()
+        self.Question.brackets_color = term.bright_green
+        self.Checkbox.selection_color = term.green + term.bold
+        self.Checkbox.selection_icon = "❯"
+        self.Checkbox.selected_icon = "* "
+        self.Checkbox.selected_color = term.green
+        self.Checkbox.unselected_icon = "  "
         self.List.selection_color = term.green
         self.List.selection_cursor = "❯"
 
