@@ -32,6 +32,9 @@ class BaseConsoleRender:
     def get_current_value(self):
         return ""
 
+    def get_option_lines(self):
+        return []
+
     def get_options(self):
         return []
 
