@@ -163,15 +163,6 @@ class Checkbox2(BaseConsoleRender):
         self.cur_row, self.cur_col = self._reverseindex(self.current)
 
 
-    def _get_option(self, question_option, theme_option, default):
-        if question_option:
-            var = question_option
-        elif theme_option:
-            var = theme_option
-        else:
-            var = default
-        return var
-
     def get_hint(self):
         try:
             hint = self.question.hints[self.question.choices[self.current]]

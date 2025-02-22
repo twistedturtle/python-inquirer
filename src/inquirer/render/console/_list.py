@@ -110,28 +110,11 @@ class List2(BaseConsoleRender):
         super().__init__(*args, **kwargs)
         self.current = self._current_index()
 
-        if self.question.hsort:
-            self.hsort = self.question.hsort
-        elif self.theme.options.hsort:
-            self.hsort = self.theme.options.hsort
-        else:
-            # shouldn't get here
-            self.hsort = False
-
-        # also check it's valid
-        if self.question.arrangement:
-            self.arrangement = self.question.arrangement
-        elif self.theme.options.arrangement:
-            self.arrangement = self.theme.options.arrangement
-        else:
-            self.arrangement = "vert"  # ["vert", "horiz", "grid"]
-
-        if self.question.pad_size:
-            self.paddingsize = self.question.pad_size
-        elif self.theme.options.pad_size:
-            self.paddingsize = self.theme.options.pad_size
-        else:
-            self.paddingsize = 2
+        q = self.question
+        t = self.theme.options
+        self.hsort = self._get_option(q.hsort, t.hsort, False)
+        self.arrangement = self._get_option(q.arrangement, t.arrangement, "vert")
+        self.paddingsize = self._get_option(q.pad_size, t.pad_size, 2)
 
         self.process_options(self.hsort)
         self.cur_row, self.cur_col = self._reverseindex(self.current)

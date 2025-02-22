@@ -19,6 +19,15 @@ class BaseConsoleRender:
         self.theme = theme
         self.show_default = show_default
 
+    def _get_option(self, question_option, theme_option, default):
+        if question_option:
+            var = question_option
+        elif theme_option:
+            var = theme_option
+        else:
+            var = default
+        return var
+
     def other_input(self):
         other = inquirer.text(self.question.message, autocomplete=self.question.autocomplete)
         return other
