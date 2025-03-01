@@ -220,6 +220,10 @@ class ConsoleRender2:
         self._position = 0
         self._theme = theme or themes.Default()
 
+        # move down a line and back up
+        # to allow space for status bar
+        self.MDU = f"\n{self.terminal.move_up}"
+
     def render(self, question, answers=None):
         question.answers = answers or {}
 
@@ -264,45 +268,33 @@ class ConsoleRender2:
         for msg in render.get_option_lines():
             self.print_line(msg)
 
+
     def _print_header(self, render):
-        base = render.get_header()
+        msg = render.get_question()
+        escaped_current_value = render.get_escaped_current_value()
+        msg_template = self.MDU + "{t.clear_eol}{msg}{t.normal}"
 
-        header = base[: self.width - 9] + "..." if len(base) > self.width - 6 else base
-        default_value = " ({color}{default}{normal})".format(
-            default=render.question.default, color=self._theme.Question.default_color, normal=self.terminal.normal
-        )
-        show_default = render.question.default and render.show_default
-        header += default_value if show_default else ""
-
-        if self._theme.Question.prefix != None:
-            msg_template = (
-            "{t.move_up}{t.clear_eol}" "{preamble}{tq.prefix}{t.normal}{msg}"
-            )
-        else:
-            msg_template = (
-                "{t.move_up}{t.clear_eol}{preamble}{tq.brackets_color}[" "{tq.mark_color}?{tq.brackets_color}]{t.normal} {msg}"
-            )
-
-        # ensure any user input with { or } will not cause a formatting error
-        escaped_current_value = str(render.get_current_value()).replace("{", "{{").replace("}", "}}")
         self.print_str(
-            f"\n{msg_template} {escaped_current_value}",
-            msg=header,
-            lf=not render.title_inline,
-            tq=self._theme.Question,
-            preamble=render.question._preamble
+            f"{msg_template} {escaped_current_value}",
+            msg=msg,
+            lf=not render.title_inline
         )
 
     def _print_hint(self, render):
-        msg_template = "{t.move_up}{t.clear_eol}{color}{msg}"
+        msg_template = self.MDU + "{t.clear_eol}{color}{msg}{t.normal}"
         hint = ""
         if render.question.hints is not None:
             hint = render.get_hint()
         color = self._theme.Question.mark_color
+
         if hint:
             self.print_str(
-                f"\n{msg_template}", msg=hint, color=color, lf=not render.title_inline, tq=self._theme.Question
+                msg_template,
+                msg=hint,
+                color=color,
+                lf=not render.title_inline
             )
+
 
     def _process_input(self, render):
         try:
@@ -369,8 +361,6 @@ class ConsoleRender2:
         return matrix.get(question_type)
 
     def print_line(self, base, lf=True, **kwargs):
-        # print("base: ", base)
-        # print("clear eol: ", self.terminal.clear_eol(), "\n\n\n\n")
         self.print_str(base + self.terminal.clear_eol(), lf=lf, **kwargs)
 
     def print_str(self, base, lf=False, **kwargs):
@@ -380,10 +370,6 @@ class ConsoleRender2:
         # Account for newlines in question
         if "msg" in kwargs:
             self._position += kwargs["msg"].count("\n")
-
-        # Account for newlines in the preamble
-        if "preamble" in kwargs:
-            self._position += kwargs["preamble"].count("\n")
 
         print(base.format(t=self.terminal, **kwargs), end="\n" if lf else "")
         sys.stdout.flush()

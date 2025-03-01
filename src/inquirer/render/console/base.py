@@ -32,6 +32,32 @@ class BaseConsoleRender:
         other = inquirer.text(self.question.message, autocomplete=self.question.autocomplete)
         return other
 
+    def get_question(self):
+        msg = self.get_header()
+
+        if self.question.default and self.show_default:
+            default_value = " ({color}{default}{normal})".format(
+                default=self.question.default, color=self.theme.Question.default_color, normal=self.terminal.normal
+            )
+            msg += default_value
+
+        t = self.terminal
+        tq = self.theme.Question
+        if self.theme.Question.prefix != None:
+            msg_template = (
+                f"{self.question._preamble}{tq.prefix}{t.normal}{msg}"
+            )
+        else:
+            msg_template = (
+                f"{self.question._preamble}{tq.brackets_color}[{tq.mark_color}?{tq.brackets_color}]{t.normal} {msg}"
+            )
+
+        return msg_template
+
+    def get_escaped_current_value(self):
+        ''' ensure any user input with { or } will not cause a formatting error '''
+        return str(self.get_current_value()).replace("{", "{{").replace("}", "}}")
+
     def get_header(self):
         return self.question.message
 
