@@ -14,7 +14,7 @@ def autocomplete_fn(_text, state):
 questions = [
     inquirer.Text(
         "name",
-        message="Press TAB to cycle through suggestions",
+        message="Press TAB to cycle through suggestions:",
         autocomplete=autocomplete_fn,
     ),
 ]

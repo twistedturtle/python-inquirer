@@ -51,8 +51,8 @@ class TextAutocompleteTest(unittest.TestCase):
     def test_autocomplete(self):
         self.sut.expect(": .*", timeout=1)
         self.sut.send("random")
-        self.sut.expect(": random.*", timeout=1)
+        self.sut.expect(": +random.*", timeout=1)
         self.sut.send(key.TAB)
-        self.sut.expect(": inquirer.*", timeout=1)
+        self.sut.expect(": +inquirer.*", timeout=1)
         self.sut.send(key.ENTER)
         self.sut.expect("{'name': 'inquirer'}", timeout=1)

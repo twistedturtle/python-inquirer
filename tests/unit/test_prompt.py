@@ -30,7 +30,7 @@ def test_print(capsys, render_mock_raise_keyboard):
     inquirer.prompt([MagicMock()], render=render_mock_raise_keyboard)
     out, _ = capsys.readouterr()
 
-    assert "Cancelled by user" in out.rstrip().lstrip()
+    assert "User Cancelled" in out.rstrip().lstrip()
 
 
 def test_raise_keyboard(render_mock_raise_keyboard):
