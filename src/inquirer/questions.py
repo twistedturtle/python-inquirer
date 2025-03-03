@@ -120,10 +120,13 @@ class Text(Question):
 
     def __init__(self, name, preamble="", message="", default=None, autocomplete=None, **kwargs):
         super().__init__(
-            name, preamble=preamble, message=message, default=str(default) if default and not callable(default) else default, **kwargs
+            name,
+            preamble=preamble,
+            message=message,
+            default=str(default) if default and not callable(default) else default,
+            **kwargs,
         )
         self.autocomplete = autocomplete
-
 
 
 class Password(Text):

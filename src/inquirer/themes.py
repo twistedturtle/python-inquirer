@@ -109,9 +109,10 @@ class Default(Theme):
         self.List.selection_cursor = ">"
         self.List.unselected_color = term.normal
 
-        self.options.hsort = False # sort horizontally if grid
-        self.options.arrangement = "vert" # ["vert", "horiz", "grid"]
-        self.options.pad_size = 2 # padding between options
+        self.options.hsort = False  # sort horizontally if grid
+        self.options.arrangement = "vert"  # ["vert", "horiz", "grid"]
+        self.options.pad_size = 2  # padding between options
+
 
 class GreenPassion(Default):
     def __init__(self):
@@ -132,7 +133,7 @@ class GreenStar(Default):
         self.Question.brackets_color = term.bright_green
         self.Checkbox.selection_color = term.green + term.bold
         self.Checkbox.selection_icon = "❯"
-        self.Checkbox.selected_icon = "✶ " # spacing varies a lot with font
+        self.Checkbox.selected_icon = "✶ "  # spacing varies a lot with font
         self.Checkbox.selected_color = term.green
         self.Checkbox.unselected_icon = "  "
         self.List.selection_color = term.green

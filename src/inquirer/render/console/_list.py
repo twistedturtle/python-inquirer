@@ -6,7 +6,11 @@ from inquirer.render.console.base import MAX_OPTIONS_DISPLAYED_AT_ONCE
 from inquirer.render.console.base import BaseConsoleRender
 from inquirer.render.console.base import half_options
 
-from inquirer.render.console._columnise import ColWidth, get_layouts, get_layouts_vert, stripformatting, get_colwidths, Option
+from inquirer.render.console._columnise import (
+    get_colwidths,
+    Option,
+)
+
 
 class List(BaseConsoleRender):
     def __init__(self, *args, **kwargs):
@@ -101,10 +105,6 @@ class List(BaseConsoleRender):
             return 0
 
 
-
-
-
-
 class List2(BaseConsoleRender):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -125,13 +125,13 @@ class List2(BaseConsoleRender):
         return len(choices) >= MAX_OPTIONS_DISPLAYED_AT_ONCE
 
     def process_options(self, hsort=False):
-        self.options = [ Option(x) for x in self.question.choices ]
+        self.options = [Option(x) for x in self.question.choices]
 
         prefix_size = len(self.theme.List.selection_cursor) + 1
 
-        self.nrows, self.ncols, self.colwidths = get_colwidths(self.options, prefix_size, self.paddingsize, hsort=self.hsort, arrangement=self.arrangement) #, displaywidth)
-
-
+        self.nrows, self.ncols, self.colwidths = get_colwidths(
+            self.options, prefix_size, self.paddingsize, hsort=self.hsort, arrangement=self.arrangement
+        )  # , displaywidth)
 
     def _reverseindex(self, i):
         if self.hsort:
@@ -147,7 +147,6 @@ class List2(BaseConsoleRender):
         if self.hsort:
             return self.ncols * row + col
         return self.nrows * col + row
-
 
     def get_hint(self):
         try:
@@ -176,16 +175,15 @@ class List2(BaseConsoleRender):
                 option = self.options[i]
                 extra = " " * (self.colwidths[c].width - option.length)
 
-                scolor  = self.theme.List.selection_color
+                scolor = self.theme.List.selection_color
                 uscolor = self.theme.List.unselected_color
                 scursor = self.theme.List.selection_cursor
 
-                color  = scolor  if self.is_selected(r, c) else uscolor
+                color = scolor if self.is_selected(r, c) else uscolor
                 cursor = scursor if self.is_selected(r, c) else " " * len(scursor)
 
                 line += f"{color}{cursor} {option.text}{uscolor}{extra}{padding}"
             yield line.rstrip(" ")
-
 
     def get_options(self):
         choices = self.question.choices or []
@@ -223,9 +221,7 @@ class List2(BaseConsoleRender):
                 symbol = " " if choice == GLOBAL_OTHER_CHOICE else " " * len(self.theme.List.selection_cursor)
             yield choice, symbol, color
 
-
     def process_input(self, pressed):
-        question = self.question
         if pressed == key.UP:
             self.cur_row -= 1
             if self.cur_row < 0:
@@ -243,7 +239,7 @@ class List2(BaseConsoleRender):
         if pressed == key.RIGHT:
             self.cur_col += 1
             if self.cur_col >= self.ncols:
-                self.cur_col = 0 if self.question.carousel else self.ncols -1
+                self.cur_col = 0 if self.question.carousel else self.ncols - 1
             count = self.colwidths[self.cur_col].count
             if self.cur_row >= count:
                 self.cur_col -= 1

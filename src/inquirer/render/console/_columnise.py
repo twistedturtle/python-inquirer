@@ -1,17 +1,18 @@
-
 # columnise
 from inquirer.render.console.base import MAX_OPTIONS_DISPLAYED_AT_ONCE
 from dataclasses import dataclass
 from shutil import get_terminal_size  # Python >= 3.3
-import re, math
+import re
+import math
 
 DEFAULT_WIDTH = 80
 
+
 def get_display_width():
-    ''' Get width of terminal '''
+    """Get width of terminal"""
     try:
         width = get_terminal_size().columns
-    except:
+    except ValueError:
         width = DEFAULT_WIDTH
 
     return width
@@ -25,20 +26,22 @@ class Option:
 
 @dataclass
 class Layout:
-    ''' A row, col combination '''
+    """A row, col combination"""
+
     rows: int = 0
     cols: int = 0
 
 
 @dataclass
 class ColWidth:
-    ''' Hold values for each column '''
+    """Hold values for each column"""
+
     width: int = 0
     count: int = 0
 
 
 def get_layouts(maxcols, size, arrangement="horiz"):
-    ''' Figure out what layouts might work '''
+    """Figure out what layouts might work"""
     layouts = []
     prevrows = []
     for col in range(1, maxcols, 1):
@@ -50,13 +53,13 @@ def get_layouts(maxcols, size, arrangement="horiz"):
     if arrangement == "horiz":
         layouts.reverse()
     elif arrangement == "grid":
-        layouts.sort(key = lambda layout: abs(layout.rows - layout.cols))
+        layouts.sort(key=lambda layout: abs(layout.rows - layout.cols))
 
     return layouts
 
 
 def get_layouts_vert(maxrows, size, arrangement="vert"):
-    ''' Figure out what layouts might work '''
+    """Figure out what layouts might work"""
     layouts = []
     prevcols = []
     for row in range(1, maxrows, 1):
@@ -68,20 +71,29 @@ def get_layouts_vert(maxrows, size, arrangement="vert"):
     if arrangement == "vert":
         layouts.reverse()
     elif arrangement == "grid":
-        layouts.sort(key = lambda layout: abs(layout.rows - layout.cols))
+        layouts.sort(key=lambda layout: abs(layout.rows - layout.cols))
 
     return layouts
 
+
 def stripformatting(s):
-    ''' Strip any ansi escape sequences '''
+    """Strip any ansi escape sequences"""
     s = str(s)
-    pat = re.compile(r'\x1B\[[0-9,;:]*?m')
-    sub = pat.sub('', s)
+    pat = re.compile(r"\x1B\[[0-9,;:]*?m")
+    sub = pat.sub("", s)
     return sub
 
 
+def index_vert(nrows, row, col):
+    return nrows * col + row
+
+
+def index_horiz(ncols, row, col):
+    return ncols * row + col
+
+
 def get_colwidths(lst, prefixsize, paddingsize, hsort, arrangement, displaywidth=get_display_width()):
-    ''' Get colwidths for a list of strings '''
+    """Get colwidths for a list of strings"""
     if (size := len(lst)) == 0:
         return
 
@@ -92,17 +104,16 @@ def get_colwidths(lst, prefixsize, paddingsize, hsort, arrangement, displaywidth
         maxrows = min(MAX_OPTIONS_DISPLAYED_AT_ONCE, size) + 1
         layouts = get_layouts_vert(maxrows, size, arrangement)
 
-    index = lambda nrows, row, col: nrows * col + row
+    index = index_vert
 
     if hsort:
-        index = lambda ncols, row, col: ncols * row + col
+        index = index_horiz
 
     for layout in layouts:
         nrows = layout.rows
         ncols = layout.cols
 
         colwidths = []
-        icolwidths = []
         line_width = 0
 
         for col in range(ncols):
@@ -127,9 +138,9 @@ def get_colwidths(lst, prefixsize, paddingsize, hsort, arrangement, displaywidth
             colwidths.append(colwidth)
             line_width += colwidth.width
 
-        line_width += prefixsize  * (len(colwidths)) + paddingsize * (len(colwidths) - 1)
+        line_width += prefixsize * (len(colwidths)) + paddingsize * (len(colwidths) - 1)
 
-        if line_width <= displaywidth-3:
+        if line_width <= displaywidth - 3:
             break
 
     return (nrows, ncols, colwidths)

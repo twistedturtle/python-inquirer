@@ -79,13 +79,12 @@ class ConsoleRender:
         show_default = render.question.default and render.show_default
         header += default_value if show_default else ""
 
-        if self._theme.Question.prefix != None:
-            msg_template = (
-            "{t.move_up}{t.clear_eol}" "{preamble}{tq.prefix}{t.normal}{msg}"
-            )
+        if self._theme.Question.prefix is not None:
+            msg_template = "{t.move_up}{t.clear_eol}" "{preamble}{tq.prefix}{t.normal}{msg}"
         else:
             msg_template = (
-                "{t.move_up}{t.clear_eol}{preamble}{tq.brackets_color}[" "{tq.mark_color}?{tq.brackets_color}]{t.normal} {msg}"
+                "{t.move_up}{t.clear_eol}{preamble}{tq.brackets_color}["
+                "{tq.mark_color}?{tq.brackets_color}]{t.normal} {msg}"
             )
 
         # ensure any user input with { or } will not cause a formatting error
@@ -95,7 +94,7 @@ class ConsoleRender:
             msg=header,
             lf=not render.title_inline,
             tq=self._theme.Question,
-            preamble=render.question._preamble
+            preamble=render.question._preamble,
         )
 
     def _print_hint(self, render):
@@ -203,14 +202,6 @@ class ConsoleRender:
         return self.terminal.height or 24
 
 
-
-
-
-
-
-
-
-
 class ConsoleRender2:
     def __init__(self, event_generator=None, theme=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -268,17 +259,12 @@ class ConsoleRender2:
         for msg in render.get_option_lines():
             self.print_line(msg)
 
-
     def _print_header(self, render):
         msg = render.get_question()
         escaped_current_value = render.get_escaped_current_value()
         msg_template = self.MDU + "{t.clear_eol}{msg}{t.normal}"
 
-        self.print_str(
-            f"{msg_template} {escaped_current_value}",
-            msg=msg,
-            lf=not render.title_inline
-        )
+        self.print_str(f"{msg_template} {escaped_current_value}", msg=msg, lf=not render.title_inline)
 
     def _print_hint(self, render):
         msg_template = self.MDU + "{t.clear_eol}{color}{msg}{t.normal}"
@@ -288,13 +274,7 @@ class ConsoleRender2:
         color = self._theme.Question.mark_color
 
         if hint:
-            self.print_str(
-                msg_template,
-                msg=hint,
-                color=color,
-                lf=not render.title_inline
-            )
-
+            self.print_str(msg_template, msg=hint, color=color, lf=not render.title_inline)
 
     def _process_input(self, render):
         try:

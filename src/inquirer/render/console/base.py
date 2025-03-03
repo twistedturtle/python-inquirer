@@ -43,10 +43,8 @@ class BaseConsoleRender:
 
         t = self.terminal
         tq = self.theme.Question
-        if self.theme.Question.prefix != None:
-            msg_template = (
-                f"{self.question._preamble}{tq.prefix}{t.normal}{msg}"
-            )
+        if self.theme.Question.prefix is not None:
+            msg_template = f"{self.question._preamble}{tq.prefix}{t.normal}{msg}"
         else:
             msg_template = (
                 f"{self.question._preamble}{tq.brackets_color}[{tq.mark_color}?{tq.brackets_color}]{t.normal} {msg}"
@@ -55,7 +53,7 @@ class BaseConsoleRender:
         return msg_template
 
     def get_escaped_current_value(self):
-        ''' ensure any user input with { or } will not cause a formatting error '''
+        """ensure any user input with { or } will not cause a formatting error"""
         return str(self.get_current_value()).replace("{", "{{").replace("}", "}}")
 
     def get_header(self):

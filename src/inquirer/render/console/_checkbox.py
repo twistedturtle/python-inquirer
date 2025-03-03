@@ -6,7 +6,10 @@ from inquirer.render.console.base import MAX_OPTIONS_DISPLAYED_AT_ONCE
 from inquirer.render.console.base import BaseConsoleRender
 from inquirer.render.console.base import half_options
 
-from inquirer.render.console._columnise import ColWidth, get_layouts, get_layouts_vert, stripformatting, get_colwidths, Option
+from inquirer.render.console._columnise import (
+    get_colwidths,
+    Option,
+)
 
 
 class Checkbox(BaseConsoleRender):
@@ -142,16 +145,12 @@ class Checkbox(BaseConsoleRender):
             self.selection.append(index)
 
 
-
-
-
 class Checkbox2(BaseConsoleRender):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.locked = self.question.locked or []
         self.selection = [k for (k, v) in enumerate(self.question.choices) if v in self.default_choices()]
         self.current = 0
-
 
         q = self.question
         t = self.theme.options
@@ -161,7 +160,6 @@ class Checkbox2(BaseConsoleRender):
 
         self.process_options()
         self.cur_row, self.cur_col = self._reverseindex(self.current)
-
 
     def get_hint(self):
         try:
@@ -180,11 +178,13 @@ class Checkbox2(BaseConsoleRender):
         return len(choices) >= MAX_OPTIONS_DISPLAYED_AT_ONCE
 
     def process_options(self, hsort=False):
-        self.options = [ Option(x) for x in self.question.choices ]
+        self.options = [Option(x) for x in self.question.choices]
 
         prefix_size = len(self.theme.List.selection_cursor) + 1
 
-        self.nrows, self.ncols, self.colwidths = get_colwidths(self.options, prefix_size, self.paddingsize, hsort=self.hsort, arrangement=self.arrangement) #, displaywidth)
+        self.nrows, self.ncols, self.colwidths = get_colwidths(
+            self.options, prefix_size, self.paddingsize, hsort=self.hsort, arrangement=self.arrangement
+        )  # , displaywidth)
 
     def _reverseindex(self, i):
         if self.hsort:
@@ -207,7 +207,7 @@ class Checkbox2(BaseConsoleRender):
             return True
         return False
 
-    def is_current(self, row,col):
+    def is_current(self, row, col):
         i = self._index(row, col)
         if i == self.current:
             return True
@@ -225,18 +225,18 @@ class Checkbox2(BaseConsoleRender):
                 extra = " " * (self.colwidths[c].width - option.length)
 
                 scursor = self.theme.Checkbox.selection_icon
-                scolor  = self.theme.Checkbox.selection_color
+                scolor = self.theme.Checkbox.selection_color
                 uscolor = self.theme.Checkbox.unselected_color
 
-                smark   = self.theme.Checkbox.selected_icon
-                usmark  = self.theme.Checkbox.unselected_icon
+                smark = self.theme.Checkbox.selected_icon
+                usmark = self.theme.Checkbox.unselected_icon
                 smcolor = self.theme.Checkbox.selected_color
 
                 if self.is_current(r, c):
                     color = scolor
                     cursor = scursor
                     mark = " " * len(smark)
-                    if self.is_selected(r,c):
+                    if self.is_selected(r, c):
                         mark = smark
                 elif self.is_selected(r, c):
                     color = smcolor
@@ -313,7 +313,6 @@ class Checkbox2(BaseConsoleRender):
 
             yield choice, selector + " " + symbol, color
 
-
     def process_input(self, pressed):
         question = self.question
         is_current_choice_locked = question.choices[self.current] in self.locked
@@ -334,7 +333,7 @@ class Checkbox2(BaseConsoleRender):
         if pressed == key.RIGHT:
             self.cur_col += 1
             if self.cur_col >= self.ncols:
-                self.cur_col = 0 if self.question.carousel else self.ncols -1
+                self.cur_col = 0 if self.question.carousel else self.ncols - 1
             count = self.colwidths[self.cur_col].count
             if self.cur_row >= count:
                 self.cur_col -= 1
