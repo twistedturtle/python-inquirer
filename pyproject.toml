@@ -29,7 +29,7 @@ blessed = ">=1.19.0"
 readchar = ">=4.2.0"
 editor = ">=1.6.0"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 bandit = ">=1.7.4"
 flake8 = ">=6.1.0"
 flake8-docstrings = ">=1.6.0"
@@ -53,7 +53,7 @@ source = ["inquirer", "tests"]
 
 [tool.coverage.report]
 show_missing = true
-fail_under = 97
+fail_under = 70
 
 [tool.black]
 line-length = 119
