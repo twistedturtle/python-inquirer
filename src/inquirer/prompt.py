@@ -20,6 +20,15 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 
+def static_vars(**kwargs):
+    def decorate(func):
+        for k in kwargs:
+            setattr(func, k, kwargs[k])
+        return func
+    return decorate
+
+
+@static_vars(rsigint=False)
 def prompt(
     questions: Optional[Union[Question, list[Question]]] = None,
     render: Union[CR, type[CR]] = CR,
@@ -32,6 +41,9 @@ def prompt(
     **kwargs
 ):
     answers = answers or {}
+
+    if not raise_sigint is None:
+        prompt.rsigint = raise_sigint
 
     if inspect.isclass(theme):
         theme = theme()
@@ -57,7 +69,7 @@ def prompt(
     except KeyboardInterrupt:
         if int_msg:
             print("\033[K" + theme.Question.int_msg)
-        if raise_sigint:
+        if prompt.rsigint:
             signal.raise_signal(signal.SIGINT)
         if raise_keyboard_interrupt:
             raise
