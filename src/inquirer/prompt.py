@@ -1,28 +1,32 @@
 import inquirer.themes as themes
 from inquirer.render.console import ConsoleRender
 
+
 import signal
 import sys
+import inspect
 
 
 def signal_handler(sig, frame):
     sys.exit(1)
-
 
 signal.signal(signal.SIGINT, signal_handler)
 
 
 def prompt(
     questions,
-    render=None,
-    answers=None,
+    render=ConsoleRender,
+    answers={},
     theme=themes.Default(),
     raise_keyboard_interrupt=False,
     raise_sigint=False,
     int_msg=True,
 ):
-    render = render or ConsoleRender(theme=theme)
-    answers = answers or {}
+    if inspect.isclass(theme):
+        theme = theme()
+
+    if inspect.isclass(render):
+        render = render(theme=theme)
 
     try:
         for question in questions:
