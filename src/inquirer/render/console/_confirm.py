@@ -19,8 +19,8 @@ class Confirm(BaseConsoleRender):
             raise errors.EndOfInput(self.question.default)
 
         if pressed in "yY":
-            print(pressed)
+            print(pressed, end="")
             raise errors.EndOfInput(True)
         if pressed in "nN":
-            print(pressed)
+            print(pressed, end="")
             raise errors.EndOfInput(False)
