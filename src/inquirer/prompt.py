@@ -1,5 +1,6 @@
 import inquirer.themes as themes
 from inquirer.render.console import ConsoleRender
+import inquirer
 
 
 import signal
@@ -32,6 +33,42 @@ def prompt(
         for question in questions:
             answers[question.name] = render.render(question, answers)
         return answers
+    except KeyboardInterrupt:
+        if int_msg:
+            print("\033[K" + theme.Question.int_msg)
+        if raise_keyboard_interrupt:
+            raise
+        if raise_sigint:
+            signal.raise_signal(signal.SIGINT)
+
+
+
+def confirm_prompt(
+    msg="Do you want to continue?",
+    default=True,
+    render=ConsoleRender,
+    answers={},
+    theme=themes.Default(),
+    raise_keyboard_interrupt=False,
+    raise_sigint=False,
+    int_msg=True,
+):
+
+    if inspect.isclass(theme):
+        theme = theme()
+
+    if inspect.isclass(render):
+        render = render(theme=theme)
+
+    question = inquirer.Confirm("confirm", message=msg, default=default)
+
+    try:
+        # for question in questions:
+        answers[question.name] = render.render(question, answers)
+        if not answers == None and answers["confirm"]:
+            return True
+        return False
+
     except KeyboardInterrupt:
         if int_msg:
             print("\033[K" + theme.Question.int_msg)

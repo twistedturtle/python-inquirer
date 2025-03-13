@@ -20,6 +20,7 @@ from inquirer.shortcuts import path
 
 __all__ = [
     "prompt",
+    "confirm_prompt",
     "Text",
     "Editor",
     "Password",
